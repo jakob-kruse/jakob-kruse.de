@@ -19,15 +19,35 @@
 
 	let blobs: BlobDef[] = [];
 
+	function randomSize(): number {
+		const screenWidth = window.innerWidth;
+		const screenHeight = window.innerHeight;
+
+		// Determine the smaller dimension of the screen
+		const smallerScreenDimension = Math.min(screenWidth, screenHeight);
+
+		// Define the range for blob sizes as a proportion of the screen size
+		// Adjust these factors to control the size range relative to the screen size
+		const minSizeFactor = 0.1; // Minimum size as a fraction of the smaller screen dimension
+		const maxSizeFactor = 0.3; // Maximum size as a fraction of the smaller screen dimension
+
+		// Calculate minimum and maximum blob sizes
+		const minBlobSize = smallerScreenDimension * minSizeFactor;
+		const maxBlobSize = smallerScreenDimension * maxSizeFactor;
+
+		// Return a random size between minBlobSize and maxBlobSize
+		return Math.random() * (maxBlobSize - minBlobSize) + minBlobSize;
+	}
+
 	onMount(() => {
 		const screenWidth = window.innerWidth;
 		const screenHeight = window.innerHeight;
 
-		blobs = Array.from({ length: 20 }, () => ({
+		blobs = Array.from({ length: Math.floor(screenWidth / 25) }, () => ({
 			initialX: Math.random() * screenWidth,
 			initialY: Math.random() * screenHeight,
 			color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-			size: Math.random() * 128 + 64
+			size: randomSize()
 		}));
 		document.addEventListener('click', addBlob);
 
@@ -44,7 +64,7 @@
 				initialX: x,
 				initialY: y,
 				color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-				size: Math.random() * 128 + 128,
+				size: randomSize(),
 				initialVelocityX: Math.random() * 10 - 5,
 				initialVelocityY: Math.random() * 10 - 5
 			}
@@ -59,7 +79,7 @@
 
 	<Tooltip.Root>
 		<Tooltip.Trigger asChild let:builder>
-			<Button builders={[builder]} href="mailto:{email}" class="my-2">
+			<Button builders={[builder]} href="mailto:{email}" class="mt-4">
 				<Mail class="mr-2 h-4 w-4" />
 				<span>Email me</span>
 			</Button>
@@ -71,8 +91,8 @@
 			</button>
 		</Tooltip.Content>
 	</Tooltip.Root>
-
-	{#each blobs as blob}
-		<Blob {...blob} />
-	{/each}
 </div>
+
+{#each blobs as blob}
+	<Blob {...blob} />
+{/each}

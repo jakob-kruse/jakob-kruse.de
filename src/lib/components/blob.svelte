@@ -10,6 +10,8 @@
 	export let initialVelocityX = 0;
 	export let initialVelocityY = 0;
 
+	let z = Math.random() * 100 - 50;
+
 	let x = initialX;
 	let y = initialY;
 	let velocityX = initialVelocityX;
@@ -52,7 +54,7 @@
 
 <div
 	style="width: {size}px; height: {size}px; transform: translate({x - size / 2}px, {y -
-		size / 2}px); background-color: {color}; "
-	class="fixed left-0 top-0 rounded-full opacity-70 mix-blend-multiply blur-xl filter transition-opacity duration-1000"
+		size / 2}px); background-color: {color}; z-index: {z};"
+	class="pointer-events-none fixed left-0 top-0 rounded-full opacity-70 blur-xl filter transition-opacity duration-1000"
 	in:fade
 ></div>
