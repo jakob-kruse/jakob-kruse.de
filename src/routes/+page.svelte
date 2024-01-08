@@ -2,7 +2,8 @@
 	import Blob from '$lib/components/blob.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { onMount } from 'svelte';
-	import { Mail, Copy } from 'lucide-svelte';
+	import Mail from 'lucide-svelte/icons/mail';
+	import Copy from 'lucide-svelte/icons/copy';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { copyText } from 'svelte-copy';
 
