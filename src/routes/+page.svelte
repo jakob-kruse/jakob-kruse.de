@@ -74,11 +74,13 @@
 </script>
 
 <div class="flex min-h-screen flex-col items-center justify-center overflow-hidden">
-	<h1 class="pointer-events-none scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+	<h1
+		class="pointer-events-none scroll-m-20 text-center text-4xl font-extrabold tracking-tight lg:text-5xl"
+	>
 		Jakob Kruse
 	</h1>
 
-	<p class="leading-7 [&:not(:first-child)]:mt-6">
+	<p class="text-center leading-7 [&:not(:first-child)]:mt-6">
 		I'm a Full-Stack Developer from Vienna, Austria.
 	</p>
 

@@ -11,13 +11,20 @@
 		cursorPos.set({ x: event.touches[0].clientX, y: event.touches[0].clientY });
 	}
 
+	function updateHeight() {
+		let vh = window.innerHeight * 0.01;
+		document.documentElement.style.setProperty('--vh', `${vh}px`);
+	}
+
 	onMount(() => {
 		window.addEventListener('mousemove', updateCursorPosition);
 		window.addEventListener('touchmove', updateTouchPosition);
+		window.addEventListener('resize', updateHeight);
 
 		return () => {
 			window.removeEventListener('mousemove', updateCursorPosition);
 			window.removeEventListener('touchmove', updateTouchPosition);
+			window.removeEventListener('resize', updateHeight);
 		};
 	});
 </script>
