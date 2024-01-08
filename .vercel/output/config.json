@@ -1,0 +1,27 @@
+{
+	"version": 3,
+	"routes": [
+		{
+			"src": "/_app/immutable/.+",
+			"headers": {
+				"cache-control": "public, immutable, max-age=31536000"
+			}
+		},
+		{
+			"handle": "filesystem"
+		},
+		{
+			"src": "^/?$",
+			"dest": "/__root__?__pathname=/"
+		},
+		{
+			"src": "^/?/__data.json$",
+			"dest": "/__root__/__data.json?__pathname=/"
+		},
+		{
+			"src": "/.*",
+			"dest": "/fn"
+		}
+	],
+	"overrides": {}
+}

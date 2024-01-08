@@ -14,8 +14,6 @@ const config = {
 		adapter: adapter({
 			isr: {
 				expiration: 60 * 60 * 24,
-				allowQuery: false,
-				bypassToken: undefined
 			}
 		})
 	}
