@@ -23,3 +23,8 @@
 </script>
 
 <slot />
+
+<svelte:head>
+	<title>Jakob Kruse</title>
+	<meta name="description" content="Jakob Kruse's personal website" />
+</svelte:head>

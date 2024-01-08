@@ -77,9 +77,13 @@
 		Jakob Kruse
 	</h1>
 
+	<p class="leading-7 [&:not(:first-child)]:mt-6">
+		I'm a Full-Stack Developer from Vienna, Austria.
+	</p>
+
 	<Tooltip.Root>
 		<Tooltip.Trigger asChild let:builder>
-			<Button builders={[builder]} href="mailto:{email}" class="mt-4">
+			<Button builders={[builder]} href="mailto:{email}" class="mt-6">
 				<Mail class="mr-2 h-4 w-4" />
 				<span>Email me</span>
 			</Button>
