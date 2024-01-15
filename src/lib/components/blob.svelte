@@ -34,8 +34,8 @@
 		x += velocityX;
 		y += velocityY;
 
-		velocityX *= 0.9;
-		velocityY *= 0.9;
+		velocityX *= 0.99;
+		velocityY *= 0.99;
 
 		if (x < size / 2 || x > window.innerWidth - size / 2) {
 			velocityX *= -1;
