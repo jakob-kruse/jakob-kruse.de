@@ -20,23 +20,76 @@
 
 	let blobs: BlobDef[] = [];
 
+	const colors_1 = [
+		'#FF6384',
+		'#36A2EB',
+		'#FFCE56',
+		'#4BC0C0',
+		'#9966FF',
+		'#FF9F40',
+		'#FFCD56',
+		'#FF6384',
+		'#36A2EB',
+		'#FFCE56',
+		'#4BC0C0',
+		'#9966FF',
+		'#FF9F40',
+		'#FFCD56'
+	];
+
+	const colors_2 = [
+		'#FF6384',
+		'#36A2EB',
+		'#FFCE56',
+		'#4BC0C0',
+		'#9966FF',
+		'#FF9F40',
+		'#FFCD56',
+		'#FF6384',
+		'#36A2EB',
+		'#FFCE56',
+		'#4BC0C0',
+		'#9966FF',
+		'#FF9F40',
+		'#FFCD56'
+	];
+
+	const colors_3 = [
+		'#FF6384',
+		'#4BC0C0',
+		'#FFD700',
+		'#32CD32',
+		'#4169E1',
+		'#FFA07A',
+		'#BA55D3',
+		'#20B2AA',
+		'#FF4500',
+		'#DA70D6',
+		'#7FFFD4',
+		'#87CEEB',
+		'#FFDAB9',
+		'#FA8072',
+		'#6A5ACD'
+	];
+
+	const colors = [...colors_1, ...colors_2, ...colors_3];
+
+	function genColor() {
+		return colors[Math.floor(Math.random() * colors.length)];
+	}
+
 	function randomSize(): number {
 		const screenWidth = window.innerWidth;
 		const screenHeight = window.innerHeight;
 
-		// Determine the smaller dimension of the screen
 		const smallerScreenDimension = Math.min(screenWidth, screenHeight);
 
-		// Define the range for blob sizes as a proportion of the screen size
-		// Adjust these factors to control the size range relative to the screen size
-		const minSizeFactor = 0.1; // Minimum size as a fraction of the smaller screen dimension
-		const maxSizeFactor = 0.3; // Maximum size as a fraction of the smaller screen dimension
+		const minSizeFactor = 0.1;
+		const maxSizeFactor = 0.3;
 
-		// Calculate minimum and maximum blob sizes
 		const minBlobSize = smallerScreenDimension * minSizeFactor;
 		const maxBlobSize = smallerScreenDimension * maxSizeFactor;
 
-		// Return a random size between minBlobSize and maxBlobSize
 		return Math.random() * (maxBlobSize - minBlobSize) + minBlobSize;
 	}
 
@@ -47,7 +100,7 @@
 		blobs = Array.from({ length: Math.floor(screenWidth / 25) }, () => ({
 			initialX: Math.random() * screenWidth,
 			initialY: Math.random() * screenHeight,
-			color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+			color: genColor(),
 			size: randomSize()
 		}));
 		document.addEventListener('click', addBlob);
@@ -64,7 +117,7 @@
 			{
 				initialX: x,
 				initialY: y,
-				color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+				color: genColor(),
 				size: randomSize(),
 				initialVelocityX: Math.random() * 10 - 5,
 				initialVelocityY: Math.random() * 10 - 5
