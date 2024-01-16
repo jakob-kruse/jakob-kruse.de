@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@antfu/utils':
+    specifier: ^0.7.7
+    version: 0.7.7
   '@sveltejs/adapter-vercel':
     specifier: ^4.0.4
     version: 4.0.4(@sveltejs/kit@2.0.8)
@@ -23,6 +26,9 @@ dependencies:
   svelte-copy:
     specifier: ^1.4.1
     version: 1.4.1(svelte@4.2.8)
+  svelte-legos:
+    specifier: ^0.2.2
+    version: 0.2.2(svelte@4.2.8)
   tailwind-merge:
     specifier: ^2.2.0
     version: 2.2.0
@@ -34,6 +40,9 @@ dependencies:
     version: 0.0.6(svelte@4.2.8)
 
 devDependencies:
+  '@biomejs/biome':
+    specifier: ^1.5.2
+    version: 1.5.2
   '@sveltejs/kit':
     specifier: ^2.0.0
     version: 2.0.8(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.11)
@@ -110,12 +119,104 @@ packages:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.20
 
+  /@antfu/utils@0.7.7:
+    resolution: {integrity: sha512-gFPqTG7otEJ8uP6wrhDv6mqwGWYZKNvAcCq6u9hOj0c+IKCEsY4L1oC9trPq2SaWIzAfHvqfBDxF591JkMf+kg==}
+    dev: false
+
   /@babel/runtime@7.23.8:
     resolution: {integrity: sha512-Y7KbAP984rn1VGMbGqKmBLio9V7y5Je9GvU4rQPCPinCyNfUcToxIXl06d59URp/F3LwinvODxab5N/G6qggkw==}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
     dev: false
+
+  /@biomejs/biome@1.5.2:
+    resolution: {integrity: sha512-LhycxGQBQLmfv6M3e4tMfn/XKcUWyduDYOlCEBrHXJ2mMth2qzYt1JWypkWp+XmU/7Hl2dKvrP4mZ5W44+nWZw==}
+    engines: {node: '>=14.*'}
+    hasBin: true
+    requiresBuild: true
+    optionalDependencies:
+      '@biomejs/cli-darwin-arm64': 1.5.2
+      '@biomejs/cli-darwin-x64': 1.5.2
+      '@biomejs/cli-linux-arm64': 1.5.2
+      '@biomejs/cli-linux-arm64-musl': 1.5.2
+      '@biomejs/cli-linux-x64': 1.5.2
+      '@biomejs/cli-linux-x64-musl': 1.5.2
+      '@biomejs/cli-win32-arm64': 1.5.2
+      '@biomejs/cli-win32-x64': 1.5.2
+    dev: true
+
+  /@biomejs/cli-darwin-arm64@1.5.2:
+    resolution: {integrity: sha512-3JVl08aHKsPyf0XL9SEj1lssIMmzOMAn2t1zwZKBiy/mcZdb0vuyMSTM5haMQ/90wEmrkYN7zux777PHEGrGiw==}
+    engines: {node: '>=14.*'}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@biomejs/cli-darwin-x64@1.5.2:
+    resolution: {integrity: sha512-QAPW9rZb/AgucUx+ogMg+9eJNipQDqvabktC5Tx4Aqb/mFzS6eDqNP7O0SbGz3DtC5Y2LATEj6o6zKIQ4ZT+3w==}
+    engines: {node: '>=14.*'}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@biomejs/cli-linux-arm64-musl@1.5.2:
+    resolution: {integrity: sha512-Z29SjaOyO4QfajplNXSjLx17S79oPN42D094zjE24z7C7p3NxvLhKLygtSP9emgaXkcoESe2chOzF4IrGy/rlg==}
+    engines: {node: '>=14.*'}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@biomejs/cli-linux-arm64@1.5.2:
+    resolution: {integrity: sha512-fVLrUgIlo05rO4cNu+Py5EwwmXnXhWH+8KrNlWkr2weMYjq85SihUsuWWKpmqU+bUVR+m5gwfcIXZVWYVCJMHw==}
+    engines: {node: '>=14.*'}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@biomejs/cli-linux-x64-musl@1.5.2:
+    resolution: {integrity: sha512-ZolquPEjWYUmGeERS8svHOOT7OXEeoriPnV8qptgWJmYF9EO9HUGRn1UtCvdVziDYK+u1A7PxjOdkY1B00ty5A==}
+    engines: {node: '>=14.*'}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@biomejs/cli-linux-x64@1.5.2:
+    resolution: {integrity: sha512-ixqJtUHtF0ho1+1DTZQLAEwHGSqvmvHhAAFXZQoaSdABn+IcITYExlFVA3bGvASy/xtPjRhTx42hVwPtLwMHwg==}
+    engines: {node: '>=14.*'}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@biomejs/cli-win32-arm64@1.5.2:
+    resolution: {integrity: sha512-DN4cXSAoFTdjOoh7f+JITj1uQgQSXt+1pVea9bFrpbgip+ZwkONqQq+jUcmFMMehbp9LuiVtNXFz/ReHn6FY7A==}
+    engines: {node: '>=14.*'}
+    cpu: [arm64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@biomejs/cli-win32-x64@1.5.2:
+    resolution: {integrity: sha512-YvWWXZmk936FdrXqc2jcP6rfsXsNBIs9MKBQQoVXIihwNNRiAaBD9Iwa/ouU1b7Zxq2zETgeuRewVJickFuVOw==}
+    engines: {node: '>=14.*'}
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
 
   /@esbuild/aix-ppc64@0.19.11:
     resolution: {integrity: sha512-FnzU0LyE3ySQk7UntJO4+qIiQgI7KoODnZg5xzXIrFJlKd2P2gwHsHY4927xj9y5PJmJSzULiUCWmv7iWnNa7g==}
@@ -1030,6 +1131,10 @@ packages:
   /caniuse-lite@1.0.30001576:
     resolution: {integrity: sha512-ff5BdakGe2P3SQsMsiqmt1Lc8221NR1VzHj5jXN5vBny9A6fpze94HiVV/n7XRosOlsShJcvMv5mdnpjOGCEgg==}
     dev: true
+
+  /canvas-confetti@1.9.2:
+    resolution: {integrity: sha512-6Xi7aHHzKwxZsem4mCKoqP6YwUG3HamaHHAlz1hTNQPCqXhARFpSXnkC9TWlahHY5CG6hSL5XexNjxK8irVErg==}
+    dev: false
 
   /chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
@@ -2220,6 +2325,15 @@ packages:
     hasBin: true
     dev: true
 
+  /prism-svelte@0.5.0:
+    resolution: {integrity: sha512-db91Bf3pRGKDPz1lAqLFSJXeW13mulUJxhycysFpfXV5MIK7RgWWK2E5aPAa71s8TCzQUXxF5JOV42/iOs6QkA==}
+    dev: false
+
+  /prismjs@1.29.0:
+    resolution: {integrity: sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==}
+    engines: {node: '>=6'}
+    dev: false
+
   /punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
@@ -2526,6 +2640,17 @@ packages:
       svelte: ^3.19.0 || ^4.0.0
     dependencies:
       svelte: 4.2.8
+
+  /svelte-legos@0.2.2(svelte@4.2.8):
+    resolution: {integrity: sha512-HTVkCIqhrxdy+OpXjxGr/4xIJEGv4d2cRQwTjm0SYfLw/YF1I1l/TQR59nb2WvjccnO8TNFNTvAWP5pgXQnU+w==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      canvas-confetti: 1.9.2
+      prism-svelte: 0.5.0
+      prismjs: 1.29.0
+      svelte: 4.2.8
+    dev: false
 
   /svelte-preprocess@5.1.3(postcss-load-config@5.0.2)(postcss@8.4.33)(svelte@4.2.8)(typescript@5.3.3):
     resolution: {integrity: sha512-xxAkmxGHT+J/GourS5mVJeOXZzne1FR5ljeOUAMXUkfEhkLEllRreXpbl3dIYJlcJRfL1LO1uIAPpBpBfiqGPw==}
