@@ -3,7 +3,7 @@
 	import Heading2 from '$lib/components/ui/typography/Heading2.svelte';
 </script>
 
-<div class="contaienr mx-auto flex flex-col gap-4 px-8 py-12">
+<div class="container mx-auto flex flex-col gap-4 px-8 py-12">
 	<Heading2>Showcase</Heading2>
 
 	<Repo

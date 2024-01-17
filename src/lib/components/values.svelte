@@ -5,7 +5,7 @@
 	import Paragraph from '$lib/components/ui/typography/Paragraph.svelte';
 </script>
 
-<div class="contaienr mx-auto px-8 py-12">
+<div class="container mx-auto px-8 py-12">
 	<Heading2 class="mb-8">My core values</Heading2>
 	<Heading3>Accessibility: Web for Everyone</Heading3>
 	<Paragraph class="mb-8">
