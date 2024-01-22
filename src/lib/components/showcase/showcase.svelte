@@ -4,7 +4,7 @@
 </script>
 
 <div class="container mx-auto flex flex-col gap-4 px-8 py-12">
-	<Heading2>Showcase</Heading2>
+	<Heading2>Projects</Heading2>
 
 	<Repo
 		name="TikBlocks"

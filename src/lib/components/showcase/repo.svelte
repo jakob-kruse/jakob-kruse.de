@@ -16,33 +16,44 @@
 </script>
 
 <Card.Root>
-	<Card.Header class="grid grid-cols-[1fr_110px] items-start gap-2 space-y-0">
+	<Card.Header class="flex flex-row items-start justify-between gap-2 space-y-0">
 		<a href={url} class="space-y-1">
 			<Card.Title>{name}</Card.Title>
 			<Card.Description>
 				{description}
 			</Card.Description>
 		</a>
-		<Button variant="outline" href={url}>
+
+		<Button variant="outline" href={url} class="hidden sm:flex">
 			<LucideStar class="mr-2 h-4 w-4" />
-			Star
+			<span> Star </span>
+		</Button>
+
+		<Button variant="outline" size="icon" href={url} class="flex aspect-square sm:hidden">
+			<LucideStar class="h-4 w-4" />
 		</Button>
 	</Card.Header>
 	<Card.Content>
 		<div class="flex space-x-4 text-sm text-muted-foreground">
 			<div class="flex items-center">
 				<LucideCircle class={cn('mr-1 h-3 w-3 ', langIconClass)} />
-				{language}
+				<span>
+					{language}
+				</span>
 			</div>
 
 			<div class="flex items-center">
 				<LucideStar class="mr-1 h-3 w-3" />
-				{stars}
+				<span>
+					{stars}
+				</span>
 			</div>
 
 			<div class="flex items-center">
 				<LucideGitCommitVertical class="mr-1 h-3 w-3" />
-				{updated}
+				<span>
+					{updated}
+				</span>
 			</div>
 		</div>
 	</Card.Content>
