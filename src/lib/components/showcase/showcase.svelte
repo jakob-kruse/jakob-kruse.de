@@ -7,6 +7,16 @@
 	<Heading2>Projects</Heading2>
 
 	<Repo
+		name="SwiftSvelte"
+		description="WIP Fully features project template for SvelteKit with Supabase"
+		language="Svelte"
+		stars={0}
+		updated="Sep 2023"
+		url="https://swiftsvelte.com"
+		langIconClass="fill-orange-500 text-orange-500"
+	/>
+
+	<Repo
 		name="TikBlocks"
 		description="Minecraft command library designed for TikFinity"
 		language="SvelteKit"
@@ -15,6 +25,7 @@
 		updated="Dec 2023"
 		url="https://tikblocks.vercel.app/"
 	/>
+
 	<Repo
 		name="Tikfinity Mod"
 		description="Minecraft integration for TikFinity"
