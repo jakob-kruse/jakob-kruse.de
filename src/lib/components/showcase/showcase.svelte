@@ -8,7 +8,7 @@
 
 	<Repo
 		name="SwiftSvelte"
-		description="WIP Fully features project template for SvelteKit with Supabase"
+		description="WIP Fully featured project template for SvelteKit with Supabase"
 		language="Svelte"
 		stars={0}
 		updated="Sep 2023"
@@ -18,7 +18,7 @@
 
 	<Repo
 		name="TikBlocks"
-		description="Minecraft command library designed for TikFinity"
+		description="Minecraft command library for TikFinity"
 		language="SvelteKit"
 		langIconClass="fill-orange-500 text-orange-500"
 		stars={0}
@@ -38,7 +38,7 @@
 
 	<Repo
 		name="setup.ts"
-		description="Node.js Project scaffolding inspired by setup.py"
+		description="Node.js Project scaffolding in TypeScript"
 		language="TypeScript"
 		stars={7}
 		updated="Jun 2022"
@@ -58,7 +58,7 @@
 
 	<Repo
 		name="maltesphotography.de"
-		description="Photography Portfolio for my friend Malte"
+		description="Photography Portfolio for Malte Holle"
 		language="Next.js"
 		stars={4}
 		updated="Jun 2022"
