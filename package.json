@@ -39,7 +39,8 @@
 	"dependencies": {
 		"@antfu/utils": "^0.7.7",
 		"@fontsource/inter": "^5.0.16",
-		"@sveltejs/adapter-vercel": "^4.0.4",
+		"@sveltejs/adapter-node": "^5.0.1",
+		"@sveltejs/adapter-static": "^3.0.1",
 		"bits-ui": "^0.13.6",
 		"clsx": "^2.1.0",
 		"mode-watcher": "^0.1.2",
