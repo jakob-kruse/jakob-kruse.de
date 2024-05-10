@@ -3,11 +3,7 @@
 	import { interactivity } from '@threlte/extras';
 
 	interactivity();
-	// const scale = spring(1);
-	// let rotation = 0;
-	// useTask((delta) => {
-	// 	rotation += delta;
-	// });
+
 </script>
 
 <T.PerspectiveCamera
