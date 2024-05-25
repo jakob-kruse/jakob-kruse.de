@@ -4,7 +4,7 @@ import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
 import { readable } from 'svelte/store';
 import { browser } from '$app/environment';
-import { throttle } from '@antfu/utils';
+import { isBrowser, throttle } from '@antfu/utils';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));

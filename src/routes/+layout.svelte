@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Toaster } from '$lib/components/ui/sonner';
+	import { ModeWatcher } from 'mode-watcher';
 	import '../app.pcss';
 	import '@fontsource/inter';
 </script>
@@ -9,6 +10,7 @@
 	<meta name="description" content="Jakob Kruse's personal website" />
 </svelte:head>
 
+<ModeWatcher defaultMode={"dark"} />
 <Toaster />
 
 <slot />
