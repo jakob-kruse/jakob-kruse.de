@@ -1,10 +1,10 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-import { cubicOut } from 'svelte/easing';
-import type { TransitionConfig } from 'svelte/transition';
-import { readable } from 'svelte/store';
 import { browser } from '$app/environment';
-import { isBrowser, throttle } from '@antfu/utils';
+import { throttle } from '@antfu/utils';
+import { type ClassValue, clsx } from 'clsx';
+import { cubicOut } from 'svelte/easing';
+import { readable } from 'svelte/store';
+import type { TransitionConfig } from 'svelte/transition';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));

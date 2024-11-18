@@ -1,11 +1,17 @@
 <script lang="ts">
 	import { cn } from '$lib/utils';
-	import { onMount } from 'svelte';
+	import { onMount, type Snippet } from 'svelte';
 
-	export let percentage = 100;
-	export let container = false;
+	type Props = {
+		percentage?: number;
+		container?: boolean;
+		class?: string;
+		children: Snippet;
+	};
 
-	let height = `${percentage}vh`;
+	let { percentage = 100, container = false, class: className, children }: Props = $props();
+
+	let height = $state(`${percentage}vh`);
 
 	onMount(() => {
 		const updateHeight = () => {
@@ -19,9 +25,6 @@
 			window.removeEventListener('resize', updateHeight);
 		};
 	});
-
-	let className = '';
-	export { className as class };
 </script>
 
 <section
@@ -33,5 +36,5 @@
 		className
 	)}
 >
-	<slot />
+	{@render children()}
 </section>
