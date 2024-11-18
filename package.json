@@ -14,7 +14,6 @@
 	"devDependencies": {
 		"@iconify-json/lucide": "^1.2.15",
 		"@sveltejs/adapter-node": "^5.2.9",
-		"@sveltejs/adapter-vercel": "^5.4.7",
 		"@sveltejs/kit": "^2.8.1",
 		"@sveltejs/vite-plugin-svelte": "^4.0.1",
 		"@types/eslint": "9.6.1",
