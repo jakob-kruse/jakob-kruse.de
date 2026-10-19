@@ -17,6 +17,7 @@
 
 <Card.Root>
 	<Card.Header class="flex flex-row items-start justify-between gap-2 space-y-0">
+		<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- Project URLs are external, not SvelteKit routes. -->
 		<a href={url} class="space-y-1">
 			<Card.Title>{name}</Card.Title>
 			<Card.Description>

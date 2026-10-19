@@ -10,7 +10,7 @@
 	<meta name="description" content="Jakob Kruse's personal website" />
 </svelte:head>
 
-<ModeWatcher defaultMode={"dark"} />
+<ModeWatcher defaultMode="dark" />
 <Toaster />
 
 <slot />

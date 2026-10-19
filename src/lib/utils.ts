@@ -1,4 +1,4 @@
-import { browser } from '$app/environment';
+import { browser } from '$app/env';
 import { throttle } from '@antfu/utils';
 import { type ClassValue, clsx } from 'clsx';
 import { cubicOut } from 'svelte/easing';

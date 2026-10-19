@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+minimum_version=1.90.1
+installed_version=""
+if command -v tailscale >/dev/null 2>&1; then
+	installed_version="$(tailscale version --json | jq -r '.majorMinorPatch')"
+fi
+
+if [[ -z "$installed_version" ]] || ! dpkg --compare-versions "$installed_version" ge "$minimum_version"; then
+	sudo install -m 0755 -d /usr/share/keyrings
+	curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.noarmor.gpg |
+		sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+	curl -fsSL https://pkgs.tailscale.com/stable/debian/bookworm.tailscale-keyring.list |
+		sudo tee /etc/apt/sources.list.d/tailscale.list >/dev/null
+
+	(
+		set -euo pipefail
+		policy_backup="$(mktemp)"
+		had_policy=false
+		if [[ -e /usr/sbin/policy-rc.d ]]; then
+			had_policy=true
+			sudo cp -p /usr/sbin/policy-rc.d "$policy_backup"
+		fi
+
+		restore_policy() {
+			if [[ "$had_policy" == true ]]; then
+				sudo cp -p "$policy_backup" /usr/sbin/policy-rc.d
+			else
+				sudo rm -f /usr/sbin/policy-rc.d
+			fi
+			sudo rm -f "$policy_backup"
+		}
+		trap restore_policy EXIT
+
+		printf '#!/bin/sh\nexit 101\n' | sudo tee /usr/sbin/policy-rc.d >/dev/null
+		sudo chmod 0755 /usr/sbin/policy-rc.d
+		sudo apt-get update
+		sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tailscale
+	)
+fi
+
+installed_version="$(tailscale version --json | jq -r '.majorMinorPatch')"
+if ! dpkg --compare-versions "$installed_version" ge "$minimum_version"; then
+	printf 'Tailscale %s or newer is required; found %s\n' "$minimum_version" "$installed_version" >&2
+	exit 1
+fi
+
+# Machine identity must be created only after activation, never in a reusable snapshot.
+sudo systemctl disable --now tailscaled.service

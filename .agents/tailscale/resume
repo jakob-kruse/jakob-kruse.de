@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -z "${TAILSCALE_CLIENT_ID:-}" || -z "${TAILSCALE_AUDIENCE:-}" ]]; then
+	printf 'Tailscale skipped: personal OIDC settings are unavailable.\n'
+	exit 0
+fi
+
+if ! command -v tailscale >/dev/null 2>&1; then
+	printf 'Tailscale settings are present, but the client is not installed; refresh the project snapshot.\n' >&2
+	exit 1
+fi
+
+sudo install -d /etc/systemd/system/tailscaled.service.d
+sudo tee /etc/systemd/system/tailscaled.service.d/amp-orb.conf >/dev/null <<'EOF'
+[Service]
+Environment=TS_ASSUME_NETWORK_UP_FOR_TEST=true
+EOF
+sudo systemctl daemon-reload
+sudo systemctl enable --now tailscaled.service
+
+if sudo tailscale status --json 2>/dev/null |
+	jq -e '.BackendState == "Running" and .Self.Online == true' >/dev/null; then
+	exit 0
+fi
+
+token_file="$(mktemp)"
+trap 'rm -f "$token_file"' EXIT
+chmod 0600 "$token_file"
+
+amp orb id-token \
+	--audience "$TAILSCALE_AUDIENCE" \
+	--subject-scope workspace >"$token_file"
+
+thread_id="${AMP_THREAD_ID:-unknown}"
+hostname="amp-orb-${thread_id#T-}"
+hostname="${hostname,,}"
+
+sudo tailscale up \
+	--client-id="${TAILSCALE_CLIENT_ID}?ephemeral=true&preauthorized=true" \
+	--id-token="file:${token_file}" \
+	--advertise-tags=tag:amp-orb \
+	--hostname="$hostname"

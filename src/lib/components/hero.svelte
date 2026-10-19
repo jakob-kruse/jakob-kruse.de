@@ -16,9 +16,7 @@
 		Jakob Kruse
 	</h1>
 
-	<p class="text-center leading-7 [&:not(:first-child)]:mt-6">
-		Full-Stack Developer from Germany
-	</p>
+	<p class="text-center leading-7 [&:not(:first-child)]:mt-6">Full-Stack Developer from Germany</p>
 
 	<div class="mt-6 flex flex-col gap-2 md:flex-row">
 		<Button href="https://github.com/jakob-kruse" size="lg">

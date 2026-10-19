@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+printf 'Preparing Bun toolchain\n'
+started=$SECONDS
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+version=$(jq -r '.packageManager | sub("^bun@"; "")' package.json)
+if ! command -v bun >/dev/null || [[ "$(bun --version)" != "$version" ]]; then
+	curl -fsSL https://bun.com/install | bash -s "bun-v$version"
+fi
+node -e 'const [major, minor] = process.versions.node.split(".").map(Number); if (major < 22 || (major === 22 && minor < 17)) process.exit(1)'
+printf 'Toolchain ready in %ss\n' "$((SECONDS - started))"
+
+printf 'Installing locked dependencies and generating SvelteKit types\n'
+started=$SECONDS
+bun install --frozen-lockfile
+bunx svelte-kit sync
+printf 'Dependencies ready in %ss\n' "$((SECONDS - started))"
+
+# BEGIN setting-up-tailscale-orbs
+.agents/tailscale/setup
+# END setting-up-tailscale-orbs

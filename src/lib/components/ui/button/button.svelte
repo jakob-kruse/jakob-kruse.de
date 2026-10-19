@@ -15,7 +15,7 @@
 
 <ButtonPrimitive.Root
 	{builders}
-	class={cn('select-none', buttonVariants({ variant, size, className }))}
+	class={cn('select-none', buttonVariants({ variant, size }), className)}
 	type="button"
 	{...$$restProps}
 	on:click
