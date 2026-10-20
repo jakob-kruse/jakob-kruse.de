@@ -1,0 +1,62 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: 22
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: package.json
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+      - run: bun run check
+      - run: bunx playwright install --with-deps chromium
+      - run: bun run test
+
+  deploy:
+    needs: check
+    runs-on: ubuntu-latest
+    environment: Production
+    # One production deploy at a time; a newer push waits rather than cancelling one mid-flight.
+    concurrency:
+      group: production
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: 22
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: package.json
+      - run: bun install --frozen-lockfile
+      - uses: hashicorp/vault-action@892a26828f195e65540a40b4768ae4571f51ebfc # v4.0.0
+        with:
+          url: https://secrets.j4k4.dev
+          method: jwt
+          path: github
+          role: jakob-kruse-de-prod
+          jwtGithubAudience: urn:openbao:github:jakob-kruse-de:prod
+          exportToken: true
+          secrets: |
+            jakob-kruse-de/data/prod/deployment CLOUDFLARE_API_TOKEN ;
+            jakob-kruse-de/data/prod/deployment CLOUDFLARE_ACCOUNT_ID
+      - run: bunx alchemy deploy --stage prod --yes --no-input
+      - if: always()
+        run: |
+          curl -sf -o /dev/null -X POST -H "X-Vault-Token: $VAULT_TOKEN" https://secrets.j4k4.dev/v1/auth/token/revoke-self || true

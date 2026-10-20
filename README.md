@@ -38,7 +38,16 @@ Normal setup changes refresh snapshots automatically; manual snapshot deletion i
 
 ## Production deployment
 
-From this project's Amp orb, run:
+Every push to `main` deploys automatically through `.github/workflows/deploy.yml`.
+It runs lint, the type check, and the Playwright tests without credentials first. The
+deploy job then runs in the `Production` environment. That environment only accepts
+`main`, and deploys run one at a time. The job logs in to OpenBao with GitHub OIDC as
+role `jakob-kruse-de-prod`, using `hashicorp/vault-action`. That role is bound to this
+repository, `main`, this workflow file and the `Production` environment. It can read
+only `jakob-kruse-de/prod/deployment`. The workflow revokes the session when it
+finishes. No GitHub secrets are used.
+
+To deploy by hand from this project's Amp orb, run:
 
 ```sh
 scripts/with-openbao --production --check
