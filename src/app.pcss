@@ -81,3 +81,100 @@ body {
 		@apply bg-background text-foreground;
 	}
 }
+
+/* Tethered panels (src/lib/tether) */
+.tether-panel {
+	touch-action: pan-y pinch-zoom;
+	-webkit-touch-callout: none;
+}
+
+.tether-panel:not(:has(a, button)) {
+	cursor: grab;
+}
+
+.tether-lifted {
+	position: relative;
+	z-index: 50;
+	border-radius: 8px;
+	background-color: hsl(var(--background));
+	box-shadow:
+		0 0 0 7px hsl(var(--background)),
+		0 0 0 8px hsl(var(--border)),
+		0 0 0 10px hsl(var(--foreground) / calc(var(--tether-strain, 0) * 0.8)),
+		0 0 calc(var(--tether-strain, 0) * 36px) 8px
+			hsl(var(--foreground) / calc(var(--tether-strain, 0) * 0.35)),
+		0 28px 50px -12px rgb(0 0 0 / 0.85);
+	will-change: transform;
+}
+
+.tether-piece {
+	pointer-events: none;
+	transform-origin: 50% 50%;
+	transform-box: border-box;
+}
+
+.tether-piece path {
+	pointer-events: auto;
+	cursor: grab;
+}
+
+/* Shaped pieces have no backing plate; they lift with a shadow that follows the outline. */
+.tether-lifted[data-tether-shape] {
+	position: absolute;
+	background: none;
+	border-radius: 0;
+	box-shadow: none;
+	filter: drop-shadow(
+			0 0 calc(var(--tether-strain, 0) * 10px)
+				hsl(var(--foreground) / calc(var(--tether-strain, 0) * 0.7))
+		)
+		drop-shadow(0 16px 14px rgb(0 0 0 / 0.45));
+}
+
+html.tether-dragging,
+html.tether-dragging * {
+	cursor: grabbing !important;
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+body::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 1.2s ease;
+	background-image:
+		linear-gradient(hsl(var(--foreground) / 0.045) 1px, transparent 1px),
+		linear-gradient(90deg, hsl(var(--foreground) / 0.045) 1px, transparent 1px);
+	background-size: 56px 56px;
+	background-position: center;
+}
+
+html.tether-exposed body::before {
+	opacity: 1;
+}
+
+.tether-alarm {
+	background: radial-gradient(
+		ellipse at center,
+		transparent 45%,
+		hsl(var(--foreground) / 0.18) 100%
+	);
+	animation: tether-alarm 0.9s ease-out 2;
+	opacity: 0;
+}
+
+@keyframes tether-alarm {
+	0% {
+		opacity: 0;
+	}
+	15% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}

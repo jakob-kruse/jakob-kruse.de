@@ -12,3 +12,5 @@ vite.config.ts.timestamp-*
 .alchemy/
 .amp/portals/*
 .amp/in/
+/test-results
+/playwright-report
