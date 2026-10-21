@@ -272,10 +272,6 @@ export class TetherEngine {
 	private dpr = 1;
 	private host: HTMLElement | null = null;
 	private layer = { width: 0, height: 0, buffer: 0 };
-	/** Which way is down on screen: the phone's tilt when known, otherwise straight down. */
-	private down: [number, number] = [0, 1];
-	private tilt: [number, number] = [0, 1];
-	private tiltRequested = false;
 
 	constructor() {
 		integrity.subscribe((s) => (this.state = s));
@@ -472,7 +468,6 @@ export class TetherEngine {
 		const panel = press.panel;
 		if (panel.phase === 'held') panel.phase = 'spring';
 		if (panel.phase === 'hang' && press.grabbed) this.trySeat(panel, 1);
-		if (panel.phase === 'hang' && endOfGesture && press.pointerType === 'touch') this.listenTilt();
 		if (!press.grabbed) {
 			panel.suppressClick = false;
 		} else if (endOfGesture) {
@@ -489,38 +484,6 @@ export class TetherEngine {
 			window.addEventListener('pointercancel', done);
 		}
 	}
-
-	/**
-	 * Lets gravity follow the phone's tilt. iOS asks for permission, which needs a
-	 * user gesture, so this runs on the pointerup that left a panel dangling.
-	 */
-	private listenTilt() {
-		if (this.tiltRequested || typeof DeviceOrientationEvent === 'undefined') return;
-		this.tiltRequested = true;
-		const listen = () => window.addEventListener('deviceorientation', this.onTilt);
-		const ask = (DeviceOrientationEvent as unknown as { requestPermission?: () => Promise<string> })
-			.requestPermission;
-		if (!ask) return listen();
-		ask()
-			.then((state) => state === 'granted' && listen())
-			.catch(() => {});
-	}
-
-	private onTilt = (e: DeviceOrientationEvent) => {
-		if (e.beta === null || e.gamma === null) return;
-		const beta = (e.beta * Math.PI) / 180;
-		const gamma = (e.gamma * Math.PI) / 180;
-		// Gravity in the device's screen plane (x right, y down), then into the
-		// page's frame when the screen is rotated.
-		const dx = Math.cos(beta) * Math.sin(gamma);
-		const dy = Math.sin(beta);
-		const a = (-(screen.orientation?.angle ?? 0) * Math.PI) / 180;
-		const x = dx * Math.cos(a) - dy * Math.sin(a);
-		// Never up: anything that falls off the top of the page is gone for good.
-		const y = Math.max(dx * Math.sin(a) + dy * Math.cos(a), 0.25);
-		const len = Math.hypot(x, y);
-		this.tilt = [x / len, y / len];
-	};
 
 	private pointerVelocity(): [number, number] {
 		const s = this.press?.samples ?? [];
@@ -693,8 +656,6 @@ export class TetherEngine {
 		this.updateScreenFloor();
 		while (this.pending >= STEP) {
 			this.pending -= STEP;
-			this.down[0] += (this.tilt[0] - this.down[0]) * 0.08;
-			this.down[1] += (this.tilt[1] - this.down[1]) * 0.08;
 			for (const p of this.panels) this.stepPanel(p, STEP, now);
 			this.stepWorld(now);
 			for (const p of this.panels) for (const r of p.ropes) this.stepRope(p, r, STEP);
@@ -817,8 +778,7 @@ export class TetherEngine {
 			const px = p.x;
 			const py = p.y;
 			const pr = p.rot;
-			p.vx += PANEL_GRAVITY * this.down[0] * hs;
-			p.vy += PANEL_GRAVITY * this.down[1] * hs;
+			p.vy += PANEL_GRAVITY * hs;
 			p.x += p.vx * hs;
 			p.y += p.vy * hs;
 			p.rot += p.vrot * hs;
@@ -1131,14 +1091,6 @@ export class TetherEngine {
 				body.applyImpulseAtPoint({ x: ix, y: iy }, { x: gx * M, y: gy * M }, true);
 			}
 		}
-		const g = world.gravity;
-		const gx = PANEL_GRAVITY * M * this.down[0];
-		const gy = PANEL_GRAVITY * M * this.down[1];
-		if (Math.hypot(g.x - gx, g.y - gy) > 0.01) {
-			world.gravity = { x: gx, y: gy };
-			// Resting bodies sleep and would ignore the new pull.
-			for (const p of this.panels) p.body?.wakeUp();
-		}
 		world.step();
 		for (const p of this.panels) {
 			const body = p.body;
@@ -1382,8 +1334,7 @@ export class TetherEngine {
 			rope.segLen = rope.length / (SEGMENTS - 1);
 		}
 
-		const gx = ROPE_GRAVITY * this.down[0] * dt * dt;
-		const gy = ROPE_GRAVITY * this.down[1] * dt * dt;
+		const gravity = ROPE_GRAVITY * dt * dt;
 		for (let i = 0; i < n; i++) {
 			const ix = i * 2;
 			const iy = ix + 1;
@@ -1391,8 +1342,8 @@ export class TetherEngine {
 			const vy = (pos[iy] - prev[iy]) * 0.985;
 			prev[ix] = pos[ix];
 			prev[iy] = pos[iy];
-			pos[ix] += vx + gx;
-			pos[iy] += vy + gy;
+			pos[ix] += vx;
+			pos[iy] += vy + gravity;
 		}
 
 		const end = rope.attached ? this.plugPos(p, rope) : null;
@@ -1468,8 +1419,7 @@ export class TetherEngine {
 
 	private stepParticles(dt: number) {
 		for (const q of this.particles) {
-			q.vx += 1300 * this.down[0] * dt;
-			q.vy += 1300 * this.down[1] * dt;
+			q.vy += 1300 * dt;
 			q.vx *= 1 - 1.5 * dt;
 			q.x += q.vx * dt;
 			q.y += q.vy * dt;
