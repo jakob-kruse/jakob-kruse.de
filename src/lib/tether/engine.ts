@@ -53,6 +53,7 @@ type Shape = {
 type Panel = {
 	el: HTMLElement;
 	shape: Shape | null;
+	rim: number;
 	slot: Rect;
 	x: number;
 	y: number;
@@ -298,9 +299,11 @@ export class TetherEngine {
 	}
 
 	register(el: HTMLElement, shape?: TetherShape) {
+		el.classList.add('tether-panel');
 		const panel: Panel = {
 			el,
 			shape: shape ? toShape(shape) : null,
+			rim: shape ? 0 : parseFloat(getComputedStyle(el).getPropertyValue('--tether-rim')),
 			slot: { x: 0, y: 0, w: 0, h: 0 },
 			x: 0,
 			y: 0,
@@ -323,7 +326,6 @@ export class TetherEngine {
 			suppressClick: false
 		};
 		this.panels.push(panel);
-		el.classList.add('tether-panel');
 		if (shape) el.dataset.tetherShape = '';
 
 		const onPointerDown = (e: PointerEvent) => this.onPointerDown(panel, e);
@@ -751,14 +753,7 @@ export class TetherEngine {
 		let target: [number, number] | null = null;
 		const [vx, vy] = this.view();
 		if (press) target = [press.client[0] + vx, press.client[1] + vy];
-		const corners = p.shape
-			? p.shape.poly.map(([u, v]) => [(u - 0.5) * w, (v - 0.5) * h])
-			: [
-					[-w / 2, -h / 2],
-					[w / 2, -h / 2],
-					[w / 2, h / 2],
-					[-w / 2, h / 2]
-				];
+		const corners = this.corners(p);
 		const left = 0;
 		const right = this.layer.width;
 		const top = 0;
@@ -950,11 +945,13 @@ export class TetherEngine {
 	private corners(p: Panel): [number, number][] {
 		const { w, h } = p.slot;
 		if (p.shape) return p.shape.poly.map(([u, v]) => [(u - 0.5) * w, (v - 0.5) * h]);
+		const hw = w / 2 + p.rim;
+		const hh = h / 2 + p.rim;
 		return [
-			[-w / 2, -h / 2],
-			[w / 2, -h / 2],
-			[w / 2, h / 2],
-			[-w / 2, h / 2]
+			[-hw, -hh],
+			[hw, -hh],
+			[hw, hh],
+			[-hw, hh]
 		];
 	}
 
@@ -978,6 +975,8 @@ export class TetherEngine {
 				.setAngularDamping(0.9)
 				.setCcdEnabled(true)
 		);
+		// Rounded cuboids specify the core half-extents, excluding the corner radius.
+		const radius = Math.min(p.rim, p.slot.w / 2, p.slot.h / 2) + p.rim;
 		const desc = p.shape
 			? R.ColliderDesc.convexHull(
 					new Float32Array(
@@ -986,7 +985,11 @@ export class TetherEngine {
 							.map((v) => v * M)
 					)
 				)
-			: R.ColliderDesc.cuboid((p.slot.w / 2) * M, (p.slot.h / 2) * M);
+			: R.ColliderDesc.roundCuboid(
+					(p.slot.w / 2 + p.rim - radius) * M,
+					(p.slot.h / 2 + p.rim - radius) * M,
+					radius * M
+				);
 		if (!desc) {
 			world.removeRigidBody(body);
 			return;

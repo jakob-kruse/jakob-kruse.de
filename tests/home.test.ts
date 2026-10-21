@@ -68,3 +68,67 @@ test('the page hydrates without waiting for the tether toy', async ({ page }) =>
 	await page.waitForFunction(() => (document.querySelector('canvas')?.width ?? 0) > 0);
 	expect(big, 'physics fetched without a grab').toEqual([]);
 });
+
+test('a lifted panel can be grabbed by its rim and lands with the rim above the floor', async ({
+	page
+}) => {
+	await page.setViewportSize({ width: 390, height: 844 });
+	await page.goto('/');
+	const panel = page
+		.locator('.tether-panel')
+		.filter({ has: page.getByRole('link', { name: 'GitHub' }) });
+	await expect(panel).toBeVisible();
+	const box = (await panel.boundingBox())!;
+	await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+	await page.mouse.down();
+	await page.mouse.move(380, 750, { steps: 10 });
+	// A sustained pull tears the wires and releases the hand.
+	await page.waitForFunction(
+		() =>
+			!document.documentElement.classList.contains('tether-dragging') &&
+			document.querySelector('.tether-lifted')
+	);
+	await page.mouse.up();
+	await expect
+		.poll(async () => (await panel.boundingBox())!.y + (await panel.boundingBox())!.height)
+		.toBeGreaterThan(825);
+	await panel.evaluate(
+		(el) =>
+			new Promise<void>((resolve) => {
+				let previous = el.getBoundingClientRect();
+				let stable = 0;
+				const frame = () => {
+					const r = el.getBoundingClientRect();
+					const movement =
+						Math.abs(r.x - previous.x) +
+						Math.abs(r.y - previous.y) +
+						Math.abs(r.width - previous.width) +
+						Math.abs(r.height - previous.height);
+					stable = movement < 0.02 ? stable + 1 : 0;
+					previous = r;
+					if (stable >= 20) resolve();
+					else requestAnimationFrame(frame);
+				};
+				requestAnimationFrame(frame);
+			})
+	);
+	// Physics allows a small contact tolerance, but not an entire 8px rim below the floor.
+	const rim = await panel.evaluate((el) => {
+		const r = el.getBoundingClientRect();
+		const m = new DOMMatrix(getComputedStyle(el).transform);
+		// A rotated rounded rectangle does not fill its bounding box's corners.
+		const bottom = r.bottom + 16 - 8 * (Math.abs(m.a) + Math.abs(m.b));
+		const localY = (el as HTMLElement).offsetHeight / 2 + 4;
+		return {
+			bottom,
+			x: r.x + r.width / 2 + m.c * localY,
+			y: r.y + r.height / 2 + m.d * localY
+		};
+	});
+	expect(rim.bottom).toBeLessThanOrEqual(842);
+	await page.mouse.move(rim.x, rim.y);
+	await page.mouse.down();
+	await page.mouse.move(rim.x, rim.y - 70, { steps: 10 });
+	await expect(page.locator('html')).toHaveClass(/tether-dragging/);
+	await page.mouse.up();
+});

@@ -84,6 +84,7 @@ body {
 
 /* Tethered panels (src/lib/tether) */
 .tether-panel {
+	--tether-rim: 8px;
 	touch-action: pan-y pinch-zoom;
 	-webkit-touch-callout: none;
 }
@@ -95,16 +96,25 @@ body {
 .tether-lifted {
 	position: relative;
 	z-index: 50;
-	border-radius: 8px;
+	border-radius: var(--tether-rim);
 	background-color: hsl(var(--background));
 	box-shadow:
-		0 0 0 7px hsl(var(--background)),
-		0 0 0 8px hsl(var(--border)),
+		0 0 0 calc(var(--tether-rim) - 1px) hsl(var(--background)),
+		0 0 0 var(--tether-rim) hsl(var(--border)),
 		0 0 0 10px hsl(var(--foreground) / calc(var(--tether-strain, 0) * 0.8)),
 		0 0 calc(var(--tether-strain, 0) * 36px) 8px
 			hsl(var(--foreground) / calc(var(--tether-strain, 0) * 0.35)),
 		0 28px 50px -12px rgb(0 0 0 / 0.85);
 	will-change: transform;
+}
+
+/* Shadows do not receive pointer events; give the solid rim a matching hit area. */
+.tether-lifted:not([data-tether-shape])::before {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	inset: calc(-1 * var(--tether-rim));
+	border-radius: calc(2 * var(--tether-rim));
 }
 
 .tether-piece {
